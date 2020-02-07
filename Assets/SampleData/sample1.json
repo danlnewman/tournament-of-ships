@@ -1,0 +1,4 @@
+{
+    "client" : 1,
+    "commands" : [ "left", "left", "up", "right" ]
+}
