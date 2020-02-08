@@ -35,18 +35,22 @@ public class GridMoveController : MonoBehaviour
             switch (moveDirection)
             {
                 case MoveDirection.left:
+                    transform.rotation = Quaternion.Euler(0f, 0f, 90f);
                     startPosition = transform.position.x;
                     endPosition = transform.position.x - 1.0f;
                     break;
                 case MoveDirection.right:
+                    transform.rotation = Quaternion.Euler(0f, 0f, -90f);
                     startPosition = transform.position.x;
                     endPosition = transform.position.x + 1.0f;
                     break;
                 case MoveDirection.up:
+                    transform.rotation = Quaternion.Euler(0f, 0f, 0f);
                     startPosition = transform.position.y;
                     endPosition = transform.position.y + 1.0f;
                     break;
                 case MoveDirection.down:
+                    transform.rotation = Quaternion.Euler(0f, 0f, 180f);
                     startPosition = transform.position.y;
                     endPosition = transform.position.y - 1.0f;
                     break;
