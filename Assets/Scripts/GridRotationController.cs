@@ -62,6 +62,15 @@ public class GridRotationController
 
     public bool Move()
     {
+        if (gridRotationDirection == GridRotationDirection.none)
+        {
+            return false;
+        }
+        else if(gridRotationDirection == GridRotationDirection.forward)
+        {
+            return gridMoveController.Move();
+        }
+
         t = (Time.time - moveStartTime) / (moveEndTime - moveStartTime);
 
         if (t >= 1.0f)
@@ -70,17 +79,8 @@ public class GridRotationController
             return false;
         }
 
-        switch (gridRotationDirection)
-        {
-            case GridRotationDirection.left:
-            case GridRotationDirection.right:
-                transform.rotation = Quaternion.Slerp(startAngle, endAngle, t);
-                break;
-            case GridRotationDirection.forward:
-                return gridMoveController.Move();
-            case GridRotationDirection.none:
-                return false;
-        }
+        transform.rotation = Quaternion.Slerp(startAngle, endAngle, t);
+
 
         return true;
     }

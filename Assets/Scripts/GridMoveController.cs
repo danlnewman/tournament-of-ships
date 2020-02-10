@@ -16,8 +16,8 @@ public class GridMoveController
     private GridMoveDirection gridMoveDirection = GridMoveDirection.none;
     private float moveStartTime = 0f;
     private float moveEndTime = 0.0001f;
-    private float startPosition;
-    private float endPosition;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
     private float t;
     private float period = 1.0f;
     private readonly Transform transform;
@@ -32,52 +32,40 @@ public class GridMoveController
         this.gridMoveDirection = setGridMoveDirection;
         moveStartTime = Time.time;
         moveEndTime = Time.time + period;
+        startPosition = transform.position;
+
 
         switch (gridMoveDirection)
         {
             case GridMoveDirection.left:
-                startPosition = transform.position.x;
-                endPosition = transform.position.x - 1.0f;
+                endPosition = new Vector3(transform.position.x - 1.0f, transform.position.y, transform.position.z);
                 break;
             case GridMoveDirection.right:
-                startPosition = transform.position.x;
-                endPosition = transform.position.x + 1.0f;
+                endPosition = new Vector3(transform.position.x + 1.0f, transform.position.y, transform.position.z);
                 break;
             case GridMoveDirection.up:
-                startPosition = transform.position.y;
-                endPosition = transform.position.y + 1.0f;
+                endPosition = new Vector3(transform.position.x, transform.position.y + 1.0f, transform.position.z);
                 break;
             case GridMoveDirection.down:
-                startPosition = transform.position.y;
-                endPosition = transform.position.y - 1.0f;
+                endPosition = new Vector3(transform.position.x, transform.position.y - 1.0f, transform.position.z);
                 break;
         }
     }
 
     public bool Move()
     {
+        if (gridMoveDirection == GridMoveDirection.none)
+            return false;
+
         t = (Time.time - moveStartTime) / (moveEndTime - moveStartTime);
 
         if (t >= 1.0f)
         {
-            //transform.position = endPosition;
+            transform.position = endPosition;
             return false;
         }
 
-        switch (gridMoveDirection)
-        {
-            case GridMoveDirection.left:
-            case GridMoveDirection.right:
-                transform.position = new Vector3(Mathf.Lerp(startPosition, endPosition, t), transform.position.y, transform.position.z);
-                break;
-            case GridMoveDirection.up:
-            case GridMoveDirection.down:
-                transform.position = new Vector3(transform.position.x, Mathf.Lerp(startPosition, endPosition, t), transform.position.z);
-                break;
-            case GridMoveDirection.none:
-                return false;
-        }
-
+        transform.position = Vector3.Lerp(startPosition, endPosition, t);
         return true;
     }
 }
