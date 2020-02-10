@@ -44,13 +44,13 @@ public class GridRotationController
         switch (gridRotationDirection)
         {
             case GridRotationDirection.left:
-                currentDirection = (GridMoveDirection)(((int)currentDirection + 3) % 4);
-                endAngle = Quaternion.Euler(0f, 0f, (float)currentDirection * -90f);
+                currentDirection = (GridMoveDirection)(((int)currentDirection + 1) % 4);
+                endAngle = Quaternion.Euler(0f, 0f, (float)currentDirection * 90f);
                 gridMoveController.SetDirection(GridMoveDirection.none);
                 break;
             case GridRotationDirection.right:
-                currentDirection = (GridMoveDirection)(((int)currentDirection + 1) % 4);
-                endAngle = Quaternion.Euler(0f, 0f, (float)currentDirection * -90f);
+                currentDirection = (GridMoveDirection)(((int)currentDirection + 3) % 4);
+                endAngle = Quaternion.Euler(0f, 0f, (float)currentDirection * 90f);
                 gridMoveController.SetDirection(GridMoveDirection.none);
                 break;
             case GridRotationDirection.forward:
@@ -66,6 +66,7 @@ public class GridRotationController
 
         if (t >= 1.0f)
         {
+            transform.rotation = endAngle;
             return false;
         }
 

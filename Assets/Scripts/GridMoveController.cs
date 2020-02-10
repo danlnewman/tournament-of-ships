@@ -5,9 +5,9 @@ using UnityEngine;
 public enum GridMoveDirection
 {
     up = 0,
-    right = 1,
+    left = 1,
     down = 2,
-    left = 3,
+    right = 3,
     none
 };
 
@@ -20,8 +20,7 @@ public class GridMoveController
     private float endPosition;
     private float t;
     private float period = 1.0f;
-    private int i = 0;
-    private Transform transform;
+    private readonly Transform transform;
 
     public GridMoveController(Transform transform)
     {
@@ -61,6 +60,7 @@ public class GridMoveController
 
         if (t >= 1.0f)
         {
+            //transform.position = endPosition;
             return false;
         }
 
