@@ -6,6 +6,9 @@ public class Ship : MonoBehaviour
 {
     ClientMessage message;
     GridRotationController gridRotationController;
+    //GridMoveDirection[] directions = { GridMoveDirection.left, GridMoveDirection.up, GridMoveDirection.right, GridMoveDirection.down };
+    GridRotationDirection[] directions = { GridRotationDirection.left, GridRotationDirection.forward };
+    int i = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +20,11 @@ public class Ship : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gridRotationController.Move();
+        if (!gridRotationController.Move())
+        {
+            GridRotationDirection gridRotationDirection = directions[i++ % directions.Length];
+            gridRotationController.SetDirection(gridRotationDirection);
+        }
     }
 
 }

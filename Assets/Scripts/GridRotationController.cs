@@ -2,50 +2,86 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum GridRotationDirection
+{
+    left,
+    right,
+    forward,
+    none
+};
+
 public class GridRotationController
 {
-
-    public enum GridRotationDirection
-    {
-        left,
-        right,
-        forward
-    };
-
     private GridMoveController gridMoveController;
+    private GridRotationDirection gridRotationDirection = GridRotationDirection.none;
+
+    private GridMoveDirection currentDirection = GridMoveDirection.up;
+
+    private float moveStartTime = 0f;
+    private float moveEndTime = 0.0001f;
+    private float currentAngle;
+    private Quaternion startAngle;
+    private Quaternion endAngle;
+    private float t;
+    private float period = 1.0f;
+
+    Transform transform;
 
     public GridRotationController(Transform transform)
     {
         this.gridMoveController = new GridMoveController(transform);
+        this.transform = transform;
     }
 
-    public void Move()
+    public void SetDirection(GridRotationDirection setGridRotationDirection)
     {
-        gridMoveController.Move();
+        this.gridRotationDirection = setGridRotationDirection;
+        moveStartTime = Time.time;
+        moveEndTime = Time.time + period;
+        startAngle = Quaternion.Euler(0f,0f,(float)currentDirection * 90f);
+
+        switch (gridRotationDirection)
+        {
+            case GridRotationDirection.left:
+                currentDirection = (GridMoveDirection)(((int)currentDirection + 3) % 4);
+                endAngle = Quaternion.Euler(0f, 0f, (float)currentDirection * -90f);
+                gridMoveController.SetDirection(GridMoveDirection.none);
+                break;
+            case GridRotationDirection.right:
+                currentDirection = (GridMoveDirection)(((int)currentDirection + 1) % 4);
+                endAngle = Quaternion.Euler(0f, 0f, (float)currentDirection * -90f);
+                gridMoveController.SetDirection(GridMoveDirection.none);
+                break;
+            case GridRotationDirection.forward:
+                gridMoveController.SetDirection(currentDirection);
+                break;
+        }
+
+    }
+
+    public bool Move()
+    {
+        t = (Time.time - moveStartTime) / (moveEndTime - moveStartTime);
+
+        if (t >= 1.0f)
+        {
+            return false;
+        }
+
+        switch (gridRotationDirection)
+        {
+            case GridRotationDirection.left:
+            case GridRotationDirection.right:
+                transform.rotation = Quaternion.Slerp(startAngle, endAngle, t);
+                break;
+            case GridRotationDirection.forward:
+                return gridMoveController.Move();
+            case GridRotationDirection.none:
+                return false;
+        }
+
+        return true;
     }
 
 }
-
-//    public ForwardMoveDirection moveDirection = MoveDirection.left;
-//    public float moveStartTime;
-//    public float moveEndTime;
-//    public float startPosition;
-//    public float endPosition;
-//    public bool moving = false;
-//    public float t;
-//    public float period = 1.0f;
-//    MoveDirection[] directions = { MoveDirection.left, MoveDirection.up, MoveDirection.right, MoveDirection.down };
-//    int i = 0;
-
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-
-//    }
-
-//    // Update is called once per frame
-//    void Update()
-//    {
-
-//    }
-//}
