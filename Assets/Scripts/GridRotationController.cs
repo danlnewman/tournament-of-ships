@@ -1,15 +1,30 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-//public class GridForwardMoveController : MonoBehaviour
-//{
-//    public enum ForwardMoveDirection
-//    {
-//        left,
-//        right,
-//        forward
-//    };
+public class GridRotationController
+{
+
+    public enum GridRotationDirection
+    {
+        left,
+        right,
+        forward
+    };
+
+    private GridMoveController gridMoveController;
+
+    public GridRotationController(Transform transform)
+    {
+        this.gridMoveController = new GridMoveController(transform);
+    }
+
+    public void Move()
+    {
+        gridMoveController.Move();
+    }
+
+}
 
 //    public ForwardMoveDirection moveDirection = MoveDirection.left;
 //    public float moveStartTime;
@@ -25,12 +40,12 @@
 //    // Start is called before the first frame update
 //    void Start()
 //    {
-        
+
 //    }
 
 //    // Update is called once per frame
 //    void Update()
 //    {
-        
+
 //    }
 //}
