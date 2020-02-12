@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Ship : MonoBehaviour
 {
+    [SerializeField]
+    public int shipId;
+
     ClientMessage message;
     GridRotationController gridRotationController;
     //GridMoveDirection[] directions = { GridMoveDirection.left, GridMoveDirection.up, GridMoveDirection.right, GridMoveDirection.down };
@@ -45,7 +48,7 @@ public class Ship : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Got coin");
-        GameManager.addPoints(0);
+        GameManager.addPoints(shipId);
     }
 
 }
