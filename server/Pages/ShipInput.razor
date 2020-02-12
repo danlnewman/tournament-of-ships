@@ -1,4 +1,6 @@
 ﻿@page "/ship/{text}"
+@using server.Data
+@inject ShipService ShipService
 
 <h1>You successfully sent @Text</h1>
 
@@ -8,6 +10,7 @@
 
     protected override void OnInitialized()
     {
-        Text = Text ?? "fantastic";
+        Text = Text ?? "none";
+        ShipService.SendDirection("test", Text);
     }
 }

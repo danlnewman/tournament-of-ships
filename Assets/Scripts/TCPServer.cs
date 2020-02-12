@@ -34,9 +34,9 @@ public class TCPServer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () { 		
-		if (Input.GetKeyDown(KeyCode.Space)) {             
-			SendMessage();         
-		} 	
+		//if (Input.GetKeyDown(KeyCode.Space)) {             
+		//	SendMessage();         
+		//} 	
 	}  	
 	
 	/// <summary> 	
@@ -53,16 +53,57 @@ public class TCPServer : MonoBehaviour {
 				using (connectedTcpClient = tcpListener.AcceptTcpClient()) {
 					Debug.Log("Got connection");
 					// Get a stream object for reading 					
-					using (NetworkStream stream = connectedTcpClient.GetStream()) { 						
-						int length; 						
-						// Read incomming stream into byte arrary. 						
-						while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) { 							
-							var incommingData = new byte[length]; 							
-							Array.Copy(bytes, 0, incommingData, 0, length);  							
-							// Convert byte array to string message. 							
-							string clientMessage = Encoding.ASCII.GetString(incommingData); 							
-							Debug.Log("client message received as: " + clientMessage); 						
-						} 					
+					using (NetworkStream stream = connectedTcpClient.GetStream()) {
+						byte[] lenBuf = new byte[1];
+						int jsonLength = 0;
+						bool foundLength = false;
+						while (!foundLength)
+						{
+							lenBuf[0] = (byte)'#';
+							stream.Read(lenBuf, 0, lenBuf.Length);
+							if (lenBuf[0] == '#')
+							{
+								foundLength = true;
+							}
+							else
+							{
+								jsonLength *= 10;
+								jsonLength += Int32.Parse(Encoding.UTF8.GetString(lenBuf));
+							}
+						}
+
+						if (jsonLength == 0)
+						{
+							Debug.LogError("Corrupt stream");
+							break;
+						}
+
+						int totalBytesRead = 0;
+						byte[] buffer = new byte[jsonLength];
+						bool readSuccess = true;
+						int bytesRemaining = jsonLength;
+
+						while(bytesRemaining > 0)
+						{
+							int bytesRead = stream.Read(buffer, totalBytesRead, bytesRemaining);
+							totalBytesRead += bytesRead;
+							bytesRemaining -= bytesRead;
+							if (bytesRead <= 0)
+							{
+								Debug.LogError("Failed to read from stream");
+								readSuccess = false;
+								break;
+							}
+						}
+
+						if (!readSuccess)
+						{
+							Debug.LogError("Corrupt stream");
+							break;
+						}
+
+						string dataString = Encoding.UTF8.GetString(buffer);
+						Debug.Log(dataString);				
 					} 				
 				} 			
 			} 		
@@ -74,25 +115,25 @@ public class TCPServer : MonoBehaviour {
 	/// <summary> 	
 	/// Send message to client using socket connection. 	
 	/// </summary> 	
-	private void SendMessage() { 		
-		if (connectedTcpClient == null) {             
-			return;         
-		}  		
+	//private void SendMessage() { 		
+	//	if (connectedTcpClient == null) {             
+	//		return;         
+	//	}  		
 		
-		try { 			
-			// Get a stream object for writing. 			
-			NetworkStream stream = connectedTcpClient.GetStream(); 			
-			if (stream.CanWrite) {                 
-				string serverMessage = "This is a message from your server."; 			
-				// Convert string message to byte array.                 
-				byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage); 				
-				// Write byte array to socketConnection stream.               
-				stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);               
-				Debug.Log("Server sent his message - should be received by client");           
-			}       
-		} 		
-		catch (SocketException socketException) {             
-			Debug.Log("Socket exception: " + socketException);         
-		} 	
-	} 
+	//	try { 			
+	//		// Get a stream object for writing. 			
+	//		NetworkStream stream = connectedTcpClient.GetStream(); 			
+	//		if (stream.CanWrite) {                 
+	//			string serverMessage = "This is a message from your server."; 			
+	//			// Convert string message to byte array.                 
+	//			byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage); 				
+	//			// Write byte array to socketConnection stream.               
+	//			stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);               
+	//			Debug.Log("Server sent his message - should be received by client");           
+	//		}       
+	//	} 		
+	//	catch (SocketException socketException) {             
+	//		Debug.Log("Socket exception: " + socketException);         
+	//	} 	
+	//} 
 }
