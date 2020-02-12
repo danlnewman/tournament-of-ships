@@ -23,7 +23,7 @@ namespace server.Data
             {
                 try
                 {
-                    client.Connect("127.0.0.1", 13000);
+                    client.Connect("127.0.0.1", 8052);
                     break;
                 }
                 catch(Exception e)
