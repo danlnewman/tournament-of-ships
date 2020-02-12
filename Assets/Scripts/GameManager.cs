@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using Random = System.Random;
 
 public class GameManager : MonoBehaviour
 {
+    static Random rnd = new Random();
+
     [SerializeField]
     public int[] coinCounter = new int[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     static GameManager instance = null;
+    [SerializeField]
+    GameObject CoinRef;
 
     // Use this for initialization
     private void Awake()
@@ -31,75 +36,94 @@ public class GameManager : MonoBehaviour
         Debug.Log("GM: " + instance.coinCounter[shipId]);
     }
 
-    //private void Start()
-    //{
-    //    TcpListener server = null;
-    //    try
-    //    {
-    //        // Set the TcpListener on port 13000.
-    //        Int32 port = 13000;
-    //        IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+    private void Start()
+    {
+        placeCoins();
+    }
 
-    //        // TcpListener server = new TcpListener(port);
-    //        server = new TcpListener(localAddr, port);
+    private void placeCoins()
+    {
+        //Random rnd = new Random();
+        //for (int a = 0; a < 16; a++)
+        //{
 
-    //        // Start listening for client requests.
-    //        server.Start();
+        //    float x = (float)rnd.Next(-7, 7) + 0.5f;
+        //    float y = (float)rnd.Next(-3, 3) + 0.5f;
+        //    Instantiate(CoinRef, new Vector3(x, y, 0), Quaternion.identity);
+        //}
 
-    //        // Buffer for reading data
-    //        Byte[] bytes = new Byte[256];
-    //        String data = null;
+        List<Tuple<float, float>> usedValue = new List<Tuple<float, float>>();
 
-    //        // Enter the listening loop.
-    //        while (true)
-    //        {
-    //            Console.Write("Waiting for a connection... ");
+        for (int a = 0; a < 4; a++)
+        {
+            Debug.Log("Q1");
+            while(true)
+            {
+                float x = (float)rnd.Next(0, 7) + 0.5f;
+                float y = (float)rnd.Next(0, 3) + 0.5f;
 
-    //            // Perform a blocking call to accept requests.
-    //            // You could also user server.AcceptSocket() here.
-    //            TcpClient client = server.AcceptTcpClient();
-    //            Console.WriteLine("Connected!");
+                Tuple<float, float> location = new Tuple<float, float>(x, y);
+                if(!usedValue.Contains(location))
+                {
+                    usedValue.Add(location);
+                    Instantiate(CoinRef, new Vector3(x, y, 0), Quaternion.identity);
+                    break;
+                }
+            }
+        }
 
-    //            data = null;
+        for (int a = 0; a < 4; a++)
+        {
+            Debug.Log("Q2");
+            while (true)
+            {
+                float x = (float)rnd.Next(0, 7) + 0.5f;
+                float y = (float)rnd.Next(-3, 0) + 0.5f;
 
-    //            // Get a stream object for reading and writing
-    //            NetworkStream stream = client.GetStream();
+                Tuple<float, float> location = new Tuple<float, float>(x, y);
+                if (!usedValue.Contains(location))
+                {
+                    usedValue.Add(location);
+                    Instantiate(CoinRef, new Vector3(x, y, 0), Quaternion.identity);
+                    break;
+                }
+            }
+        }
 
-    //            int i;
+        for (int a = 0; a < 4; a++)
+        {
+            Debug.Log("Q3");
+            while (true)
+            {
+                float x = (float)rnd.Next(-7, 0) + 0.5f;
+                float y = (float)rnd.Next(-3, 0) + 0.5f;
 
-    //            // Loop to receive all the data sent by the client.
-    //            while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-    //            {
-    //                // Translate data bytes to a ASCII string.
-    //                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-    //                Console.WriteLine("Received: {0}", data);
+                Tuple<float, float> location = new Tuple<float, float>(x, y);
+                if (!usedValue.Contains(location))
+                {
+                    usedValue.Add(location);
+                    Instantiate(CoinRef, new Vector3(x, y, 0), Quaternion.identity);
+                    break;
+                }
+            }
+        }
 
-    //                // Process the data sent by the client.
-    //                data = data.ToUpper();
+        for (int a = 0; a < 4; a++)
+        {
+            Debug.Log("Q4");
+            while (true)
+            {
+                float x = (float)rnd.Next(-7, 0) + 0.5f;
+                float y = (float)rnd.Next(0, 3) + 0.5f;
 
-    //                byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-    //                // Send back a response.
-    //                stream.Write(msg, 0, msg.Length);
-    //                Console.WriteLine("Sent: {0}", data);
-    //            }
-
-    //            // Shutdown and end connection
-    //            client.Close();
-    //        }
-    //    }
-    //    catch (SocketException e)
-    //    {
-    //        Console.WriteLine("SocketException: {0}", e);
-    //    }
-    //    finally
-    //    {
-    //        // Stop listening for new clients.
-    //        server.Stop();
-    //    }
-
-
-    //    Console.WriteLine("\nHit enter to continue...");
-    //    Console.Read();
-    //}
+                Tuple<float, float> location = new Tuple<float, float>(x, y);
+                if (!usedValue.Contains(location))
+                {
+                    usedValue.Add(location);
+                    Instantiate(CoinRef, new Vector3(x, y, 0), Quaternion.identity);
+                    break;
+                }
+            }
+        }
+    }
 }

@@ -49,6 +49,7 @@ public class Ship : MonoBehaviour
     {
         Debug.Log("Got coin");
         GameManager.addPoints(shipId);
+        Destroy(collision.gameObject);
     }
 
 }
