@@ -16,7 +16,6 @@ public class Ship : MonoBehaviour
         gridRotationController = new GridRotationController(transform);
         message = JsonUtility.FromJson<ClientMessage>("{\"ship\" : 1,\"commands\" : [ \"right\", \"forward\"]}");
         directions = System.Array.ConvertAll(message.commands, value => stringToGridRotationDirection(value));
-
     }
 
     GridRotationDirection stringToGridRotationDirection(string s)
@@ -45,6 +44,7 @@ public class Ship : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Got Coin");
+        Debug.Log("Got coin");
     }
+
 }

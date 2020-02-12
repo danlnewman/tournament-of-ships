@@ -1,25 +1,27 @@
 using System;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace server.Data
 {
     public class ShipService
     {
-        private static readonly string[] Summaries = new[]
+        public ShipService()
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+            Task.Run(HandleUnityConnection);
+        }
 
-        public Task<WeatherForecast[]> SendDirectionAsync(DateTime startDate)
+        public bool SendDirectionAsync(string direction)
         {
-            var rng = new Random();
-            return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = startDate.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            }).ToArray());
+            return true;
+        }
+
+        public void HandleUnityConnection()
+        {
+            TcpClient client = new TcpClient();
+            client.Connect("localhost", 13000);
+
         }
     }
 }

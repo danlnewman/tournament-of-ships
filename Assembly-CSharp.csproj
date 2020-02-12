@@ -64,6 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ClientMessage.cs" />
+    <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GridMoveController.cs" />
     <Compile Include="Assets\Scripts\GridRotationController.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
