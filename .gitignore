@@ -59,4 +59,4 @@ sysinfo.txt
 crashlytics-build.properties
 
 server/[Oo]bj/
-server//[Bb]in/
+server/[Bb]in/
