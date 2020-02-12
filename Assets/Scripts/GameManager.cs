@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     GameObject CoinRef;
     [SerializeField]
     Text scoreText;
+    [SerializeField]
+    Ship[] ship;
 
     // Use this for initialization
     private void Awake()
@@ -47,7 +49,11 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         scoreText.text = "Ship 0: " + instance.coinCounter[0];
-        Debug.Log(instance.coinCounter[0]);
+    }
+
+    static public void SendClientMessage(ClientMessage message)
+    {
+        instance.ship[message.client].queue.Enqueue(message);
     }
 
     private void placeCoins()

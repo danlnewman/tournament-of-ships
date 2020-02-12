@@ -2249,6 +2249,19 @@ MonoBehaviour:
   coinCounter: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   CoinRef: {fileID: 4119951229154088383, guid: 39c203d34b151b24d9420e7ce2f3a58e, type: 3}
   scoreText: {fileID: 1279008316}
+  ship:
+  - {fileID: 1858118608}
+  - {fileID: 1776397688}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &1620606415
 Transform:
   m_ObjectHideFlags: 0

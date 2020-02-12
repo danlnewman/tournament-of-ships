@@ -103,7 +103,8 @@ public class TCPServer : MonoBehaviour {
 						}
 
 						string dataString = Encoding.UTF8.GetString(buffer);
-						Debug.Log(dataString);				
+						ClientMessage message = JsonUtility.FromJson<ClientMessage>(dataString);
+						GameManager.SendClientMessage(message);			
 					} 				
 				} 			
 			} 		

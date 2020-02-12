@@ -53,11 +53,12 @@ namespace server.Data
             {
                 try
                 {
-                    TcpClient client = new TcpClient();
-                    client.Connect("127.0.0.1", 8052);
-                    NetworkStream stream = client.GetStream();
+
                     while(true)
                     {
+                                            TcpClient client = new TcpClient();
+                    client.Connect("127.0.0.1", 8052);
+                    NetworkStream stream = client.GetStream();
                         ClientMessage message = inbox.Take();
                         string jsonString = JsonSerializer.Serialize(message);
                         string jsonSocketString = jsonString.Length + "#" + jsonString;
@@ -68,8 +69,6 @@ namespace server.Data
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine(e);
-                    await Task.Delay(1000);
                 }
             }
 

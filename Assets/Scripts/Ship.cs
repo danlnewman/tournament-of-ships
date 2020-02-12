@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,13 +13,16 @@ public class Ship : MonoBehaviour
     //GridMoveDirection[] directions = { GridMoveDirection.left, GridMoveDirection.up, GridMoveDirection.right, GridMoveDirection.down };
     GridRotationDirection[] directions;// = { GridRotationDirection.right, GridRotationDirection.forward };
     int i = 0;
+    public ConcurrentQueue<ClientMessage> queue;
 
     // Start is called before the first frame update
     void Start()
     {
         gridRotationController = new GridRotationController(transform);
-        message = JsonUtility.FromJson<ClientMessage>("{\"ship\" : 1,\"commands\" : [ \"right\", \"forward\"]}");
-        directions = System.Array.ConvertAll(message.commands, value => stringToGridRotationDirection(value));
+        directions = new GridRotationDirection[] { GridRotationDirection.none };
+        //message = JsonUtility.FromJson<ClientMessage>("{\"ship\" : 1,\"commands\" : [ \"right\", \"forward\"]}");
+        //directions = System.Array.ConvertAll(message.commands, value => stringToGridRotationDirection(value));
+        queue = new ConcurrentQueue<ClientMessage>();
     }
 
     GridRotationDirection stringToGridRotationDirection(string s)
@@ -38,9 +42,17 @@ public class Ship : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gridRotationController.Move())
+        ClientMessage newMessage;
+        if (queue.TryDequeue(out newMessage))
         {
-            GridRotationDirection gridRotationDirection = directions[i++ % directions.Length];
+            i = 0;
+            directions = System.Array.ConvertAll(newMessage.commands, value => stringToGridRotationDirection(value));
+
+        }
+
+        if (!gridRotationController.Move() && i < directions.Length)
+        {
+            GridRotationDirection gridRotationDirection = directions[i++];
             gridRotationController.SetDirection(gridRotationDirection);
         }
     }
