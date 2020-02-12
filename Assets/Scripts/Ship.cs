@@ -81,6 +81,19 @@ public class Ship : MonoBehaviour
 
     }
 
+    public void ResetMove()
+    {
+        while (!queue.IsEmpty)
+        {
+            ClientMessage message;
+            queue.TryDequeue(out message);
+        }
+
+        directions = new GridRotationDirection[] { GridRotationDirection.none };
+        i = 0;
+
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Got coin");

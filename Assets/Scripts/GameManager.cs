@@ -101,13 +101,10 @@ public class GameManager : MonoBehaviour
             Destroy(obj);
         }
 
-        foreach (Ship s in ship)
+        foreach(Ship s in ship)
         {
-            while(!s.queue.IsEmpty)
-            {
-                ClientMessage message;
-                s.queue.TryDequeue(out message);
-            }
+            s.ResetMove();
+
         }
 
         placeCoins();
@@ -117,12 +114,19 @@ public class GameManager : MonoBehaviour
 
     private void StartCompetition()
     {
+
         startedMoves = false;
         timeLeft = 30;
+
+        foreach (Ship s in ship)
+        {
+            s.ResetMove();
+        }
+
         for (int i = 0; i < 12; i++)
         {
             instance.coinCounter[i] = 0;
-            ship[i].transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            ship[i].transform.rotation = Quaternion.Euler(0f,0f,0f);
 
         }
 
@@ -167,7 +171,6 @@ public class GameManager : MonoBehaviour
 
         for (int a = 0; a < 4; a++)
         {
-            Debug.Log("Q1");
             while(true)
             {
                 float x = (float)rnd.Next(0, 7) + 0.5f;
@@ -185,7 +188,6 @@ public class GameManager : MonoBehaviour
 
         for (int a = 0; a < 4; a++)
         {
-            Debug.Log("Q2");
             while (true)
             {
                 float x = (float)rnd.Next(0, 7) + 0.5f;
@@ -203,7 +205,6 @@ public class GameManager : MonoBehaviour
 
         for (int a = 0; a < 4; a++)
         {
-            Debug.Log("Q3");
             while (true)
             {
                 float x = (float)rnd.Next(-7, 0) + 0.5f;
@@ -221,7 +222,6 @@ public class GameManager : MonoBehaviour
 
         for (int a = 0; a < 4; a++)
         {
-            Debug.Log("Q4");
             while (true)
             {
                 float x = (float)rnd.Next(-7, 0) + 0.5f;
