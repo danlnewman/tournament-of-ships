@@ -9,7 +9,6 @@ namespace server.Data
     {
         public ShipService()
         {
-            Task.Run(HandleUnityConnection);
         }
 
         public bool SendDirectionAsync(string direction)
@@ -17,11 +16,30 @@ namespace server.Data
             return true;
         }
 
-        public void HandleUnityConnection()
+        public async Task HandleUnityConnectionAsync()
         {
             TcpClient client = new TcpClient();
-            client.Connect("localhost", 13000);
+            while(true)
+            {
+                try
+                {
+                    client.Connect("127.0.0.1", 13000);
+                    break;
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                    await Task.Delay(1000);
+                }
+            }
 
+
+
+        }
+
+        public void Start()
+        {
+            Task.Run(HandleUnityConnectionAsync);
         }
     }
 }
