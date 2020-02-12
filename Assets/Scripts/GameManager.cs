@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject CoinRef;
     [SerializeField]
-    Text scoreText;
+    Text[] scoresText = new Text[12];
     [SerializeField]
     Ship[] ship;
 
@@ -48,7 +48,11 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        scoreText.text = "Ship 0: " + instance.coinCounter[0];
+        for (int i = 0; i < 12; i++)
+        {
+            scoresText[i].text = "Ship_" +i+": " + instance.coinCounter[i];
+        }
+           
     }
 
     static public void SendClientMessage(ClientMessage message)
