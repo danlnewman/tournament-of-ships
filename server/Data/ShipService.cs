@@ -25,7 +25,18 @@ namespace server.Data
             inbox = new BlockingCollection<ClientMessage>(new ConcurrentQueue<ClientMessage>());
         }
 
-        public void SendDirection(string ip, string direction)
+        public void SendDirections(ClientCommands commands)
+        {
+            Console.WriteLine(httpContextAccessor.HttpContext.Connection.RemoteIpAddress);
+            ClientMessage message = new ClientMessage();
+            message.client = GetShipId(httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
+            message.commands = commands.commands;
+
+            inbox.Add(message);
+        }
+
+
+        public void SendDirection(string direction)
         {
             Console.WriteLine(httpContextAccessor.HttpContext.Connection.RemoteIpAddress);
             ClientMessage message = new ClientMessage();
