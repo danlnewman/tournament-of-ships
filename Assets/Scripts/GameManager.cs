@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = System.Random;
 
 public class GameManager : MonoBehaviour
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
     static GameManager instance = null;
     [SerializeField]
     GameObject CoinRef;
+    [SerializeField]
+    Text scoreText;
 
     // Use this for initialization
     private void Awake()
@@ -39,6 +42,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         placeCoins();
+    }
+
+    public void Update()
+    {
+        scoreText.text = "Ship 0: " + instance.coinCounter[0];
+        Debug.Log(instance.coinCounter[0]);
     }
 
     private void placeCoins()
