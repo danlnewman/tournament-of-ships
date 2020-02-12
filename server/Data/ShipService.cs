@@ -36,7 +36,7 @@ namespace server.Data
         }
 
 
-        public void SendDirection(string direction)
+        public int SendDirection(string direction)
         {
             Console.WriteLine(httpContextAccessor.HttpContext.Connection.RemoteIpAddress);
             ClientMessage message = new ClientMessage();
@@ -45,6 +45,7 @@ namespace server.Data
             message.commands[0] = direction;
             
             inbox.Add(message);
+            return message.client;
 
         }
 

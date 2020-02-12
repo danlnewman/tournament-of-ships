@@ -19,7 +19,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Text[] scoresText = new Text[12];
     [SerializeField]
+    Text timer;
+    [SerializeField]
     Ship[] ship;
+    bool inCompetition = false;
+    bool startedMoves = false;
+    float timeLeft;
 
     // Use this for initialization
     private void Awake()
@@ -35,6 +40,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static bool InCompetition()
+    {
+        return instance.inCompetition;
+    }
+
     public static void addPoints(int shipId)
     {
         instance.coinCounter[shipId]++;
@@ -48,11 +58,93 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
+        if (Input.GetButtonDown("Jump") && !inCompetition)
+        {
+            StartCompetition();
+        }
+
         for (int i = 0; i < 12; i++)
         {
             scoresText[i].text = "Ship_" +i+": " + instance.coinCounter[i];
         }
+
+        if (!startedMoves && inCompetition)
+        {
+            timeLeft -= Time.deltaTime;
+            if (timeLeft < 0)
+            {
+                startedMoves = true;
+                timer.text = "";
+                foreach(Ship s in ship)
+                {
+                    s.StartMoving();
+                }
+                StartCoroutine(EndCompetition());
+            }
+            else
+            {
+                timer.text = ((int)timeLeft).ToString();
+
+            }
+        }
            
+    }
+
+    private IEnumerator EndCompetition()
+    {
+        yield return new WaitForSeconds(30);
+
+        // kill previous instances of asteroids
+        GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject obj in allObjects)
+        {
+            Destroy(obj);
+        }
+
+        foreach (Ship s in ship)
+        {
+            while(!s.queue.IsEmpty)
+            {
+                ClientMessage message;
+                s.queue.TryDequeue(out message);
+            }
+        }
+
+        placeCoins();
+        startedMoves = false;
+        inCompetition = false;
+    }
+
+    private void StartCompetition()
+    {
+        startedMoves = false;
+        timeLeft = 30;
+        for (int i = 0; i < 12; i++)
+        {
+            instance.coinCounter[i] = 0;
+            ship[i].transform.eulerAngles = new Vector3(0f, 0f, 0f);
+
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            ship[i].transform.position = new Vector3(-6.5f + i, -3.5f, 0f);
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            ship[i+6].transform.position = new Vector3(1.5f + i, -3.5f, 0f);
+        }
+
+        // kill previous instances of asteroids
+        GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject obj in allObjects)
+        {
+            Destroy(obj);
+        }
+
+        placeCoins();
+        inCompetition = true;
     }
 
     static public void SendClientMessage(ClientMessage message)

@@ -42,19 +42,43 @@ public class Ship : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ClientMessage newMessage;
-        if (queue.TryDequeue(out newMessage))
+        if (!GameManager.InCompetition())
         {
-            i = 0;
-            directions = System.Array.ConvertAll(newMessage.commands, value => stringToGridRotationDirection(value));
+            ClientMessage newMessage;
+            if (queue.TryDequeue(out newMessage))
+            {
+                i = 0;
+                directions = System.Array.ConvertAll(newMessage.commands, value => stringToGridRotationDirection(value));
+
+            }
+        }
+
+            if (!gridRotationController.Move() && i < directions.Length)
+            {
+                GridRotationDirection gridRotationDirection = directions[i++];
+                gridRotationController.SetDirection(gridRotationDirection);
+            }
+        
+
+    }
+
+    public void StartMoving()
+    {
+        while(true)
+        {
+            ClientMessage newMessage;
+            if (queue.TryDequeue(out newMessage))
+            {
+                i = 0;
+                directions = System.Array.ConvertAll(newMessage.commands, value => stringToGridRotationDirection(value));
+            }
+            else
+            {
+                break;
+            }
 
         }
 
-        if (!gridRotationController.Move() && i < directions.Length)
-        {
-            GridRotationDirection gridRotationDirection = directions[i++];
-            gridRotationController.SetDirection(gridRotationDirection);
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
