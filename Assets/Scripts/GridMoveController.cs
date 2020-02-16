@@ -38,16 +38,16 @@ public class GridMoveController
         switch (gridMoveDirection)
         {
             case GridMoveDirection.left:
-                endPosition = new Vector3(transform.position.x - 1.0f, transform.position.y, transform.position.z);
+                endPosition = new Vector3(Mathf.Clamp(transform.position.x - 1.0f, -7.5f, 7.5f), transform.position.y, transform.position.z);
                 break;
             case GridMoveDirection.right:
-                endPosition = new Vector3(transform.position.x + 1.0f, transform.position.y, transform.position.z);
+                endPosition = new Vector3(Mathf.Clamp(transform.position.x + 1.0f, -7.5f, 7.5f), transform.position.y, transform.position.z);
                 break;
             case GridMoveDirection.up:
-                endPosition = new Vector3(transform.position.x, transform.position.y + 1.0f, transform.position.z);
+                endPosition = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y + 1.0f, -3.5f, 3.5f), transform.position.z);
                 break;
             case GridMoveDirection.down:
-                endPosition = new Vector3(transform.position.x, transform.position.y - 1.0f, transform.position.z);
+                endPosition = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y - 1.0f, -3.5f, 3.5f), transform.position.z);
                 break;
         }
     }

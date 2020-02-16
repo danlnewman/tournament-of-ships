@@ -49,28 +49,39 @@ namespace server.Data
 
         }
 
+
+        // private int GetShipId(string ip)
+        // {
+        //     if (!clientIps.ContainsKey(ip))
+        //     {
+        //         clientIps[ip] = Interlocked.Increment(ref shipIndex) - 1;
+        //     }
+
+        //     return clientIps[ip];
+        // }
+
+        private Dictionary<string, int> shipDictionary = new Dictionary<string,int>()
+        {
+            {"192.168.0.116", 0},
+            {"192.168.0.229", 4}
+
+        };
         private int GetShipId(string ip)
         {
-            if (!clientIps.ContainsKey(ip))
-            {
-                clientIps[ip] = Interlocked.Increment(ref shipIndex) - 1;
-            }
-
-            return clientIps[ip];
+            return shipDictionary[ip];
         }
 
-        public async Task HandleUnityConnectionAsync()
+        public void HandleUnityConnectionAsync()
         {
             while(true)
             {
                 try
                 {
-
-                    while(true)
-                    {
-                                            TcpClient client = new TcpClient();
+                    TcpClient client = new TcpClient();
                     client.Connect("127.0.0.1", 8052);
                     NetworkStream stream = client.GetStream();
+                    while(true)
+                    {
                         ClientMessage message = inbox.Take();
                         string jsonString = JsonSerializer.Serialize(message);
                         string jsonSocketString = jsonString.Length + "#" + jsonString;

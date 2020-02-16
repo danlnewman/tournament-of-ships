@@ -7,11 +7,32 @@
 @code {
     [Parameter]
     public string Text { get; set; }
+    public string WebText = "";
     int shipId;
 
     protected override void OnInitialized()
     {
         Text = Text ?? "none";
+
+        Text = Text.ToLower();
+        if (Text.StartsWith("l"))
+        {
+            Text = "left";
+        }
+        else if( Text.StartsWith("r"))
+        {
+            Text = "right";
+        }
+        else if ( Text.StartsWith("f"))
+        {
+            Text = "forward";
+        }
+        else
+        {
+            WebText = "Invalid: please send left, right, or forward.";
+        }
+
         shipId = ShipService.SendDirection(Text);
+        WebText = "Ship " + shipId + " was sent " + Text + ".";
     }
 }

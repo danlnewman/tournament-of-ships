@@ -54,57 +54,60 @@ public class TCPServer : MonoBehaviour {
 					Debug.Log("Got connection");
 					// Get a stream object for reading 					
 					using (NetworkStream stream = connectedTcpClient.GetStream()) {
-						byte[] lenBuf = new byte[1];
-						int jsonLength = 0;
-						bool foundLength = false;
-						while (!foundLength)
+						while (true)
 						{
-							lenBuf[0] = (byte)'#';
-							stream.Read(lenBuf, 0, lenBuf.Length);
-							if (lenBuf[0] == '#')
+							byte[] lenBuf = new byte[1];
+							int jsonLength = 0;
+							bool foundLength = false;
+							while (!foundLength)
 							{
-								foundLength = true;
+								lenBuf[0] = (byte)'#';
+								stream.Read(lenBuf, 0, lenBuf.Length);
+								if (lenBuf[0] == '#')
+								{
+									foundLength = true;
+								}
+								else
+								{
+									jsonLength *= 10;
+									jsonLength += Int32.Parse(Encoding.UTF8.GetString(lenBuf));
+								}
 							}
-							else
+
+							if (jsonLength == 0)
 							{
-								jsonLength *= 10;
-								jsonLength += Int32.Parse(Encoding.UTF8.GetString(lenBuf));
-							}
-						}
-
-						if (jsonLength == 0)
-						{
-							Debug.LogError("Corrupt stream");
-							break;
-						}
-
-						int totalBytesRead = 0;
-						byte[] buffer = new byte[jsonLength];
-						bool readSuccess = true;
-						int bytesRemaining = jsonLength;
-
-						while(bytesRemaining > 0)
-						{
-							int bytesRead = stream.Read(buffer, totalBytesRead, bytesRemaining);
-							totalBytesRead += bytesRead;
-							bytesRemaining -= bytesRead;
-							if (bytesRead <= 0)
-							{
-								Debug.LogError("Failed to read from stream");
-								readSuccess = false;
+								Debug.LogError("Corrupt stream");
 								break;
 							}
-						}
 
-						if (!readSuccess)
-						{
-							Debug.LogError("Corrupt stream");
-							break;
-						}
+							int totalBytesRead = 0;
+							byte[] buffer = new byte[jsonLength];
+							bool readSuccess = true;
+							int bytesRemaining = jsonLength;
 
-						string dataString = Encoding.UTF8.GetString(buffer);
-						ClientMessage message = JsonUtility.FromJson<ClientMessage>(dataString);
-						GameManager.SendClientMessage(message);			
+							while (bytesRemaining > 0)
+							{
+								int bytesRead = stream.Read(buffer, totalBytesRead, bytesRemaining);
+								totalBytesRead += bytesRead;
+								bytesRemaining -= bytesRead;
+								if (bytesRead <= 0)
+								{
+									Debug.LogError("Failed to read from stream");
+									readSuccess = false;
+									break;
+								}
+							}
+
+							if (!readSuccess)
+							{
+								Debug.LogError("Corrupt stream");
+								break;
+							}
+
+							string dataString = Encoding.UTF8.GetString(buffer);
+							ClientMessage message = JsonUtility.FromJson<ClientMessage>(dataString);
+							GameManager.SendClientMessage(message);
+						}
 					} 				
 				} 			
 			} 		
