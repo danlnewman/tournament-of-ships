@@ -14,6 +14,8 @@ public class Ship : MonoBehaviour
     GridRotationDirection[] directions;// = { GridRotationDirection.right, GridRotationDirection.forward };
     int i = 0;
     public ConcurrentQueue<ClientMessage> queue;
+    [SerializeField]
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +25,8 @@ public class Ship : MonoBehaviour
         //message = JsonUtility.FromJson<ClientMessage>("{\"ship\" : 1,\"commands\" : [ \"right\", \"forward\"]}");
         //directions = System.Array.ConvertAll(message.commands, value => stringToGridRotationDirection(value));
         queue = new ConcurrentQueue<ClientMessage>();
+        animator = GetComponentInChildren<Animator>();
+
     }
 
     GridRotationDirection stringToGridRotationDirection(string s)
@@ -53,11 +57,13 @@ public class Ship : MonoBehaviour
             }
         }
 
-            if (!gridRotationController.Move() && i < directions.Length)
-            {
-                GridRotationDirection gridRotationDirection = directions[i++];
-                gridRotationController.SetDirection(gridRotationDirection);
-            }
+        bool moving = gridRotationController.Move();
+        animator.SetBool("Moving", moving);
+        if (!moving && i < directions.Length)
+        {
+            GridRotationDirection gridRotationDirection = directions[i++];
+            gridRotationController.SetDirection(gridRotationDirection);
+        }
         
 
     }
