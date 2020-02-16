@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\GridMoveController.cs" />
     <Compile Include="Assets\Scripts\GridRotationController.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
+    <Compile Include="Assets\Scripts\SimpleSpriteAnimator.cs" />
     <Compile Include="Assets\Scripts\TCPServer.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/logic/repos/tournament-of-ships/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
