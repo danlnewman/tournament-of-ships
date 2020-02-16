@@ -19,6 +19,8 @@ namespace server.Data
         ConcurrentDictionary<string, int> clientIps = new ConcurrentDictionary<string, int>();
         int shipIndex = 0;
 
+        ClientMessage savedMessage = null; 
+
         public ShipService(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
@@ -79,15 +81,26 @@ namespace server.Data
                 {
                     TcpClient client = new TcpClient();
                     client.Connect("127.0.0.1", 8052);
-                    NetworkStream stream = client.GetStream();
-                    while(true)
+                    using NetworkStream stream = client.GetStream();
                     {
-                        ClientMessage message = inbox.Take();
-                        string jsonString = JsonSerializer.Serialize(message);
-                        string jsonSocketString = jsonString.Length + "#" + jsonString;
-                        Console.WriteLine(jsonSocketString);
-                        byte[] buf = Encoding.ASCII.GetBytes(jsonSocketString);
-                        stream.Write(buf, 0, buf.Length);
+                        while(client.Connected)
+                        {
+                            //if (savedMessage == null)
+                            if (!inbox.TryTake(out savedMessage, 100))
+                            {
+                                savedMessage = new ClientMessage();
+                                savedMessage.client = 99;
+                            }
+
+                            string jsonString = JsonSerializer.Serialize(savedMessage);
+                            string jsonSocketString = jsonString.Length + "#" + jsonString;
+                            if (savedMessage.client != 99)
+                                Console.WriteLine(jsonSocketString);
+                            byte[] buf = Encoding.ASCII.GetBytes(jsonSocketString);
+                            stream.Write(buf, 0, buf.Length);
+                            //savedMessage = null;
+                        }
+                        Console.WriteLine("Disconnected");
                     }
                 }
                 catch(Exception e)
