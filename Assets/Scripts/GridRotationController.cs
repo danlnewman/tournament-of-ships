@@ -20,7 +20,6 @@ public class GridRotationController
 
     private float moveStartTime = 0f;
     private float moveEndTime = 0.0001f;
-    private float currentAngle;
     private Quaternion startAngle;
     private Quaternion endAngle;
     private float t;
@@ -83,6 +82,12 @@ public class GridRotationController
 
 
         return true;
+    }
+
+    public void Reset()
+    {
+        currentDirection = GridMoveDirection.up;
+        gridRotationDirection = GridRotationDirection.none;
     }
 
 }

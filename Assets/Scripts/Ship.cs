@@ -96,8 +96,7 @@ public class Ship : MonoBehaviour
         }
 
         directions = new GridRotationDirection[] { GridRotationDirection.none };
-        GridRotationDirection gridRotationDirection = directions[0];
-        gridRotationController.SetDirection(gridRotationDirection);
+        gridRotationController.Reset();
         i = 0;
 
     }

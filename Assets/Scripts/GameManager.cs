@@ -94,30 +94,14 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(30);
 
-        // kill previous instances of asteroids
-        GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Coin");
-        foreach (GameObject obj in allObjects)
-        {
-            Destroy(obj);
-        }
+        ResetGame();
 
-        foreach(Ship s in ship)
-        {
-            s.ResetMove();
-
-        }
-
-        placeCoins();
         startedMoves = false;
         inCompetition = false;
     }
 
-    private void StartCompetition()
+    private void ResetGame()
     {
-
-        startedMoves = false;
-        timeLeft = 30;
-
         foreach (Ship s in ship)
         {
             s.ResetMove();
@@ -126,7 +110,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < 12; i++)
         {
             instance.coinCounter[i] = 0;
-            ship[i].transform.rotation = Quaternion.Euler(0f,0f,0f);
+            ship[i].transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
         }
 
@@ -137,10 +121,10 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
         {
-            ship[i+6].transform.position = new Vector3(1.5f + i, -3.5f, 0f);
+            ship[i + 6].transform.position = new Vector3(1.5f + i, -3.5f, 0f);
         }
 
-        // kill previous instances of asteroids
+        // Remove all coins
         GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Coin");
         foreach (GameObject obj in allObjects)
         {
@@ -148,6 +132,16 @@ public class GameManager : MonoBehaviour
         }
 
         placeCoins();
+    }
+
+    private void StartCompetition()
+    {
+
+        startedMoves = false;
+        timeLeft = 30;
+
+        ResetGame();
+ 
         inCompetition = true;
     }
 
@@ -158,15 +152,6 @@ public class GameManager : MonoBehaviour
 
     private void placeCoins()
     {
-        //Random rnd = new Random();
-        //for (int a = 0; a < 16; a++)
-        //{
-
-        //    float x = (float)rnd.Next(-7, 7) + 0.5f;
-        //    float y = (float)rnd.Next(-3, 3) + 0.5f;
-        //    Instantiate(CoinRef, new Vector3(x, y, 0), Quaternion.identity);
-        //}
-
         List<Tuple<float, float>> usedValue = new List<Tuple<float, float>>();
 
         for (int a = 0; a < 4; a++)

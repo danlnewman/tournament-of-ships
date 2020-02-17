@@ -2,7 +2,7 @@
 @using server.Data
 @inject ShipService ShipService
 
-<h1>Ship @shipId was sent @Text</h1>
+<h1>@WebText</h1>
 
 @code {
     [Parameter]
@@ -33,6 +33,6 @@
         }
 
         shipId = ShipService.SendDirection(Text);
-        WebText = "Ship " + shipId + " was sent " + Text + ".";
+        WebText = "Ship " + shipId + " was sent the command \"" + Text + "\".";
     }
 }
